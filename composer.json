@@ -3,9 +3,9 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "guzzlehttp/guzzle": "~6.2.0",
-        "jacklam/php-tools": "dev-master",
-        "bupt1987/html-parser": "dev-master"
+        "guzzlehttp/guzzle": "6.2.x",
+        "bupt1987/html-parser": "dev-master",
+        "symfony/property-access": "2.8.x"
     },
     "autoload": {
         "psr-4": {
