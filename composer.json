@@ -2,5 +2,14 @@
     "name": "wiz/iciba-parser",
     "type": "library",
     "license": "MIT",
-    "require": {}
+    "require": {
+        "guzzlehttp/guzzle": "~6.2.0",
+        "jacklam/php-tools": "dev-master",
+        "bupt1987/html-parser": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wiz\\": "src/Wiz"
+        }
+    }
 }
