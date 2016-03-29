@@ -68,6 +68,8 @@ class ICIBAParser
     }
 
     /**
+     * 获取抓取的数据
+     *
      * @param string $html
      * @param array  $result
      *
@@ -160,6 +162,7 @@ class ICIBAParser
                         $k++;
                     }
                     if ($value->nodeName === "a" && $accessor->getValue($data['shapes'][$k], "[1]")) {
+                        //归为一类
                         $data['shapes'][$k][1] = $data['shapes'][$k][1] . "," . trim($value->nodeValue);
                     } elseif ($value->nodeName === "a") {
                         array_push($data['shapes'][$k], trim($value->nodeValue));
@@ -181,7 +184,7 @@ class ICIBAParser
         if ($node) {
             $index = -1;
             $arr = 0;
-            //当没有order,设定一个default值
+            //当没有section-h,设定一个default值
             foreach ($node->find('div') as $v) {
                 if ($v->getAttr('class') != 'section-h') {
                     $index = 0;
