@@ -185,7 +185,14 @@ class ICIBAParser
         $data['collins'] = [];
         /** @var ParserDom $node */
         $node = $dom->find('.collins-section', 0);
-        if ($node) {
+        $isCollins = false;
+        //判断是否存在collins
+        foreach ($dom->find('.article-list li') as $v) {
+            if (trim($v->getPlainText()) === "柯林斯高阶英汉双解学习词典") {
+                $isCollins = true;
+            }
+        }
+        if ($node && $isCollins) {
             $index = -1;
             $arr = 0;
             //当没有section-h,设定一个default值
