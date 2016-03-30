@@ -54,8 +54,7 @@ class ICIBAParser
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Encoding' => 'gzip, deflate',
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0'
-            ],
-            'debug' => true
+            ]
         ]);
 
         if ($reponse->getStatusCode() === 200) {
@@ -71,7 +70,7 @@ class ICIBAParser
      * 获取抓取的数据
      *
      * @param string $html
-     * @param array  $result
+     * @param array $result
      *
      * @return static|static[]
      */
@@ -79,6 +78,11 @@ class ICIBAParser
     {
         $dom = new ParserDom($html);
         $mainContent = $dom->find('.result-info', 0);
+
+        // 判断word是否存在
+        if ($mainContent->find('img') || empty($mainContent->find('.info-base', 0)->find('base-speak'))) {
+            throw new \LogicException("Word does not exist");
+        }
 
         $this->speak($mainContent, $result);
         $this->rate($mainContent, $result);
@@ -91,7 +95,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     public function speak(ParserDom $dom, array &$data)
     {
@@ -108,7 +112,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     public function rate(ParserDom $dom, array &$data)
     {
@@ -122,7 +126,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     public function translation(ParserDom $dom, array &$data)
     {
@@ -144,7 +148,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     public function shapes(ParserDom $dom, array &$data)
     {
@@ -174,7 +178,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     public function collins(ParserDom $dom, array &$data)
     {
