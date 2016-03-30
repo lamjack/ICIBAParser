@@ -217,7 +217,7 @@ class ICIBAParser
                 } elseif (trim($v->getAttr('class')) == 'text-sentence') {
                     $sentence = array();
                     foreach ($v->find('.sentence-item ') as $value) {
-                        preg_match("/(.+)<i class=\"speak-step\" onmouseover=\"displayAudio\(\'(\S+)\'\)\"><\/i>/", $value->find('p.family-english', 0)->innerHtml(), $out);
+                        preg_match("/(.+)<i class=\"speak-step\" onmouseover=\"displayAudio\(\'(.*)\'\)\"><\/i>/", $value->find('p.family-english', 0)->innerHtml(), $out);
                         $sentenceZh = $value->find('p.family-chinese', 0)->getPlainText();
                         array_push($sentence, array(
                             'en' => $out[1],
