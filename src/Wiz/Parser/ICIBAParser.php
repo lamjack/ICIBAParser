@@ -49,29 +49,28 @@ class ICIBAParser
      */
     public function query(string $word)
     {
-        $reponse = $this->client->request('GET', sprintf('%s/%s', self::DOMAIN, $word), [
+        $response = $this->client->request('GET', sprintf('%s/%s', self::DOMAIN, $word), [
             'headers' => [
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Encoding' => 'gzip, deflate',
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0'
-            ],
-            'debug' => true
+            ]
         ]);
 
-        if ($reponse->getStatusCode() === 200) {
+        if ($response->getStatusCode() === 200) {
             $result = ['word' => $word];
-            $this->parser($reponse->getBody()->getContents(), $result);
+            $this->parser($response->getBody()->getContents(), $result);
             return $result;
         }
 
-        return false;
+        return array('errCode' => 500, "errMsg" => "服务器请求失败");
     }
 
     /**
      * 获取抓取的数据
      *
      * @param string $html
-     * @param array  $result
+     * @param array $result
      *
      * @return static|static[]
      */
@@ -80,18 +79,23 @@ class ICIBAParser
         $dom = new ParserDom($html);
         $mainContent = $dom->find('.result-info', 0);
 
-        $this->speak($mainContent, $result);
-        $this->rate($mainContent, $result);
-        $this->translation($mainContent, $result);
-        $this->shapes($mainContent, $result);
-        $this->collins($dom, $result);
+        // 判断word是否存在
+        if ($mainContent->find('img') || empty($mainContent->find('.info-base', 0)->find('.base-speak .new-speak-step'))) {
+            $result = array('errCode' => 404, "errMsg" => "单词不存在");
+        } else {
+            $this->speak($mainContent, $result);
+            $this->rate($mainContent, $result);
+            $this->translation($mainContent, $result);
+            $this->shapes($mainContent, $result);
+            $this->collins($dom, $result);
+        }
 
         return $mainContent;
     }
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     protected function speak(ParserDom $dom, array &$data)
     {
@@ -108,7 +112,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     protected function rate(ParserDom $dom, array &$data)
     {
@@ -122,7 +126,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     protected function translation(ParserDom $dom, array &$data)
     {
@@ -144,7 +148,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     protected function shapes(ParserDom $dom, array &$data)
     {
@@ -174,7 +178,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array     $data
+     * @param array $data
      */
     protected function collins(ParserDom $dom, array &$data)
     {
