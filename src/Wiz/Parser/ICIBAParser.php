@@ -49,7 +49,7 @@ class ICIBAParser
      */
     public function query(string $word)
     {
-        $reponse = $this->client->request('GET', sprintf('%s/%s', self::DOMAIN, $word), [
+        $response = $this->client->request('GET', sprintf('%s/%s', self::DOMAIN, $word), [
             'headers' => [
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Encoding' => 'gzip, deflate',
@@ -57,13 +57,13 @@ class ICIBAParser
             ]
         ]);
 
-        if ($reponse->getStatusCode() === 200) {
+        if ($response->getStatusCode() === 200) {
             $result = ['word' => $word];
-            $this->parser($reponse->getBody()->getContents(), $result);
+            $this->parser($response->getBody()->getContents(), $result);
             return $result;
         }
 
-        return false;
+        return array('errCode' => 500, "errMsg" => "服务器请求失败");
     }
 
     /**
@@ -80,15 +80,15 @@ class ICIBAParser
         $mainContent = $dom->find('.result-info', 0);
 
         // 判断word是否存在
-        if ($mainContent->find('img') || empty($mainContent->find('.info-base', 0)->find('base-speak'))) {
-            throw new \LogicException("Word does not exist");
+        if ($mainContent->find('img') || empty($mainContent->find('.info-base', 0)->find('.base-speak .new-speak-step'))) {
+            $result = array('errCode' => 404, "errMsg" => "单词不存在");
+        } else {
+            $this->speak($mainContent, $result);
+            $this->rate($mainContent, $result);
+            $this->translation($mainContent, $result);
+            $this->shapes($mainContent, $result);
+            $this->collins($dom, $result);
         }
-
-        $this->speak($mainContent, $result);
-        $this->rate($mainContent, $result);
-        $this->translation($mainContent, $result);
-        $this->shapes($mainContent, $result);
-        $this->collins($dom, $result);
 
         return $mainContent;
     }
