@@ -75,7 +75,7 @@ class ICIBAParser
      *
      * @return static|static[]
      */
-    public function parser(string $html, array &$result = [])
+    protected function parser(string $html, array &$result = [])
     {
         $dom = new ParserDom($html);
         $mainContent = $dom->find('.result-info', 0);
@@ -93,7 +93,7 @@ class ICIBAParser
      * @param ParserDom $dom
      * @param array     $data
      */
-    public function speak(ParserDom $dom, array &$data)
+    protected function speak(ParserDom $dom, array &$data)
     {
         $data['speak'] = [];
         /** @var ParserDom $node */
@@ -110,7 +110,7 @@ class ICIBAParser
      * @param ParserDom $dom
      * @param array     $data
      */
-    public function rate(ParserDom $dom, array &$data)
+    protected function rate(ParserDom $dom, array &$data)
     {
         $data['rate'] = 0;
         /** @var ParserDom $node */
@@ -124,7 +124,7 @@ class ICIBAParser
      * @param ParserDom $dom
      * @param array     $data
      */
-    public function translation(ParserDom $dom, array &$data)
+    protected function translation(ParserDom $dom, array &$data)
     {
         $data['translation'] = [];
         /** @var ParserDom $node */
@@ -146,7 +146,7 @@ class ICIBAParser
      * @param ParserDom $dom
      * @param array     $data
      */
-    public function shapes(ParserDom $dom, array &$data)
+    protected function shapes(ParserDom $dom, array &$data)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
         $data['shapes'] = [];
@@ -176,7 +176,7 @@ class ICIBAParser
      * @param ParserDom $dom
      * @param array     $data
      */
-    public function collins(ParserDom $dom, array &$data)
+    protected function collins(ParserDom $dom, array &$data)
     {
         $data['collins'] = [];
         /** @var ParserDom $node */
