@@ -14,7 +14,6 @@
  */
 namespace Wiz\Parser;
 
-use GuzzleHttp\Client;
 use HtmlParser\ParserDom;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -39,7 +38,7 @@ class ICIBAParser
      */
     public function __construct()
     {
-        $this->client = new Client(['cookies' => true]);
+        $this->client = Client::getInstance();
     }
 
     /**
@@ -70,7 +69,7 @@ class ICIBAParser
      * 获取抓取的数据
      *
      * @param string $html
-     * @param array $result
+     * @param array  $result
      *
      * @return static|static[]
      */
@@ -95,7 +94,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array $data
+     * @param array     $data
      */
     protected function speak(ParserDom $dom, array &$data)
     {
@@ -112,7 +111,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array $data
+     * @param array     $data
      */
     protected function rate(ParserDom $dom, array &$data)
     {
@@ -126,7 +125,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array $data
+     * @param array     $data
      */
     protected function translation(ParserDom $dom, array &$data)
     {
@@ -148,7 +147,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array $data
+     * @param array     $data
      */
     protected function shapes(ParserDom $dom, array &$data)
     {
@@ -178,7 +177,7 @@ class ICIBAParser
 
     /**
      * @param ParserDom $dom
-     * @param array $data
+     * @param array     $data
      */
     protected function collins(ParserDom $dom, array &$data)
     {
