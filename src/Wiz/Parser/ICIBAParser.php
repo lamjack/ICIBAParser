@@ -79,7 +79,7 @@ class ICIBAParser
         $mainContent = $dom->find('.result-info', 0);
 
         // 判断word是否存在
-        if ($mainContent->find('img') || empty($mainContent->find('.info-base', 0)->find('.base-speak .new-speak-step'))) {
+        if ($mainContent->find('img') || $mainContent->find('.info-base', 0)->find('.suggest_b')) {
             $result = array('errCode' => 404, "errMsg" => "单词不存在");
         } else {
             $this->speak($mainContent, $result);
