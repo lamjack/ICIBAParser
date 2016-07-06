@@ -78,15 +78,18 @@ class ICIBAParser
         $dom = new ParserDom($html);
         $mainContent = $dom->find('.result-info', 0);
 
-        // 判断word是否存在
-        if ($mainContent->find('img') || $mainContent->find('.info-base', 0)->find('.suggest_b')) {
-            $result = array('errCode' => 404, "errMsg" => "单词不存在");
+        if ($mainContent instanceof ParserDom) {
+            try {
+                $this->speak($mainContent, $result);
+                $this->rate($mainContent, $result);
+                $this->translation($mainContent, $result);
+                $this->shapes($mainContent, $result);
+                $this->collins($dom, $result);
+            } catch (\Exception $e) {
+                throw $e;
+            }
         } else {
-            $this->speak($mainContent, $result);
-            $this->rate($mainContent, $result);
-            $this->translation($mainContent, $result);
-            $this->shapes($mainContent, $result);
-            $this->collins($dom, $result);
+            $result = array('errCode' => 404, "errMsg" => "单词不存在");
         }
 
         return $mainContent;
@@ -215,8 +218,13 @@ class ICIBAParser
                     $data['collins'][$index]['translation'][$arr]['note'] = $note;
                 } elseif (trim($v->getAttr('class')) == 'text-sentence') {
                     $sentence = array();
-                    foreach ($v->find('.sentence-item ') as $value) {
-                        preg_match("/(.+)<i class=\"speak-step\" onmouseover=\"displayAudio\(\'(.*)\'\)\"><\/i>/", $value->find('p.family-english', 0)->innerHtml(), $out);
+                    foreach ($v->find('.sentence-item') as $value) {
+                        $tmpEngHtml = $value->find('p.family-english', 0)->innerHtml();
+                        if (strpos($tmpEngHtml, 'onmouseover') !== false) {
+                            preg_match("/(.+)<i class=\"speak-step\" onmouseover=\"displayAudio\(\'(.*)\'\)\"><\/i>/", $value->find('p.family-english', 0)->innerHtml(), $out);
+                        } else {
+                            preg_match("/(.+)<i class=\"speak-step\" onclick=\"displayAudio\(\'(.*)\'\)\"><\/i>/", $value->find('p.family-english', 0)->innerHtml(), $out);
+                        }
                         $sentenceZh = $value->find('p.family-chinese', 0)->getPlainText();
                         array_push($sentence, array(
                             'en' => $out[1],
