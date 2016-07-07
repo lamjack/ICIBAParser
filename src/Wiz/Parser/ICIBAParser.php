@@ -53,8 +53,7 @@ class ICIBAParser
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Encoding' => 'gzip, deflate',
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0'
-            ],
-            'timeout' => 5
+            ]
         ]);
 
         if ($response->getStatusCode() === 200) {
@@ -73,6 +72,8 @@ class ICIBAParser
      * @param array  $result
      *
      * @return static|static[]
+     *
+     * @throws \Exception
      */
     protected function parser(string $html, array &$result = [])
     {
