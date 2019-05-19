@@ -5,7 +5,7 @@
     "require": {
         "guzzlehttp/guzzle": "6.2.x",
         "bupt1987/html-parser": "dev-master",
-        "symfony/property-access": "2.8.x"
+        "symfony/property-access": "3.4.x"
     },
     "autoload": {
         "psr-4": {
