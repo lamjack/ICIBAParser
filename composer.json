@@ -3,7 +3,7 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "guzzlehttp/guzzle": "6.2.x",
+        "guzzlehttp/guzzle": "~6.2",
         "bupt1987/html-parser": "dev-master",
         "symfony/property-access": "3.4.x"
     },
